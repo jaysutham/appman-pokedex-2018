@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import './App.css'
+import axios from 'axios';
+import MyPokeDex from './Modules/MyPokeDex';
 
 const COLORS = {
   Psychic: "#f8a5c2",
@@ -15,13 +17,32 @@ const COLORS = {
   Fire: "#eb4d4b"
 }
 
-class App extends Component {
+class App extends React.Component {
+  state = {
+    pokemonList: [],
+    searchModal: false,
+    myPokeDex: [],
+    isLoading: true
+  }
+
+  async componentDidMount() {
+    const res = await axios.get("http://localhost:3030/api/cards")
+    this.setState({pokemonList: res.data.cards})
+    this.setState({ isLoading: false })
+  }
+
   render() {
+
+    //Loading Screen
+    if(this.isLoading) return "Loading...."
+    
+    //App Screen
     return (
-      <div className="App">
-      </div>
+        <MyPokeDex pokemonList={this.state.pokemonList}/>
     )
   }
+
 }
+
 
 export default App
